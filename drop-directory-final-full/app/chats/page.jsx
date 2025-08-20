@@ -1,1 +1,0 @@
-export default function ChatsPage(){ return (<main className='p-6'><h1 className='text-2xl font-bold mb-2'>Chats</h1><p className='text-gray-600'>Chat functionality is a stub for now.</p></main>); }

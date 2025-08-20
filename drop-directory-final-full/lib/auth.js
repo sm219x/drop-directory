@@ -1,1 +1,0 @@
-export const DEMO_USER = { name: "Sagar", email: "sagar@example.com", avatar: "/images/sagar.png" };
