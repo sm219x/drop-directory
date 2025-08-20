@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { PRODUCTS } from '../../lib/products';
 import { useCart } from '../../components/CartProvider';
 
@@ -15,8 +16,23 @@ export default function ShopPage() {
             key={p.id}
             className="rounded-xl border bg-white p-4 shadow-sm"
           >
-            <div className="h-36 bg-gray-200 rounded-md mb-3 flex items-center justify-center">
-              <span className="text-gray-500 text-sm">Image</span>
+            <div className="h-36 bg-gray-200 rounded-md mb-3 flex items-center justify-center overflow-hidden">
+              {p.image ? (
+                <Image
+                  src={p.image}
+                  alt={p.name}
+                  width={150}
+                  height={150}
+                  className="object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.parentElement.innerHTML =
+                      "<span class='text-gray-500 text-sm'>No Image</span>";
+                  }}
+                />
+              ) : (
+                <span className="text-gray-500 text-sm">No Image</span>
+              )}
             </div>
             <div className="flex items-center justify-between">
               <div>
