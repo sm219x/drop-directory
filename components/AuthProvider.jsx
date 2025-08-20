@@ -1,0 +1,30 @@
+'use client';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { DEMO_USER } from '../lib/auth';
+
+const AuthContext = createContext({ user: null, login: ()=>{}, logout: ()=>{}, ready:false });
+
+export function AuthProvider({ children }){
+  const [user, setUser] = useState(null);
+  const [ready, setReady] = useState(false);
+
+  useEffect(()=>{
+    const raw = typeof window !== 'undefined' ? localStorage.getItem('dd_user') : null;
+    if(raw) setUser(JSON.parse(raw));
+    setReady(true);
+  },[]);
+
+  const login = ()=>{
+    setUser(DEMO_USER);
+    if(typeof window !== 'undefined') localStorage.setItem('dd_user', JSON.stringify(DEMO_USER));
+  };
+
+  const logout = ()=>{
+    setUser(null);
+    if(typeof window !== 'undefined') localStorage.removeItem('dd_user');
+  };
+
+  return <AuthContext.Provider value={{ user, login, logout, ready }}>{children}</AuthContext.Provider>;
+}
+
+export const useAuth = ()=> useContext(AuthContext);

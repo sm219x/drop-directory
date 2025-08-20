@@ -1,0 +1,29 @@
+'use client';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+
+const CartContext = createContext({ cart: [], add: ()=>{}, remove: ()=>{}, total: 0, ready: false });
+
+export function CartProvider({ children }){
+  const [cart, setCart] = useState([]);
+  const [ready, setReady] = useState(false);
+
+  useEffect(()=>{
+    const raw = typeof window !== 'undefined' ? localStorage.getItem('dd_cart') : null;
+    if(raw) setCart(JSON.parse(raw));
+    setReady(true);
+  },[]);
+
+  useEffect(()=>{
+    if(ready && typeof window !== 'undefined'){
+      localStorage.setItem('dd_cart', JSON.stringify(cart));
+    }
+  },[cart, ready]);
+
+  const add = (p)=> setCart(c=>[...c, p]);
+  const remove = (id)=> setCart(c=>c.filter(i=>i.id!==id));
+  const total = useMemo(()=> cart.reduce((s,i)=> s + i.price, 0), [cart]);
+
+  return <CartContext.Provider value={{ cart, add, remove, total, ready }}>{children}</CartContext.Provider>;
+}
+
+export const useCart = ()=> useContext(CartContext);
